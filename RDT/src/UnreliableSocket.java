@@ -1,7 +1,7 @@
 import java.net.*;
 
 public class UnreliableSocket {
-    private DatagramSocket socket;
+    public DatagramSocket socket;
     private double lossProbability;
     private double delayProbability;
     private int delayMillis;
@@ -11,6 +11,8 @@ public class UnreliableSocket {
     public UnreliableSocket(int port, double lossProbability) throws SocketException {
         this.socket = new DatagramSocket(port);
         this.lossProbability = lossProbability;
+        this.delayProbability = Math.random();
+        this.corruptProbability = Math.random();
     }
 
     public void bind(int port) throws SocketException {
