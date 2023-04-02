@@ -4,7 +4,7 @@ public class UnreliableSocket {
     public DatagramSocket socket;
     private double lossProbability;
     private double delayProbability;
-    private int delayMillis;
+    private int delayMillis = 200;
     private double corruptProbability;
 
 
@@ -41,7 +41,7 @@ public class UnreliableSocket {
     
         // Simulate packet corruption
         if (this.corruptProbability > 0 && Math.random() < this.corruptProbability) {
-            int corruptIndex = (int) (Math.random() * packet.getLength());
+            int corruptIndex = (int) (Math.random() * (packet.getLength() - 20)) + 20;
             buffer[corruptIndex] ^= 0xFF;
         }
     

@@ -2,6 +2,7 @@ import java.nio.ByteBuffer;
 import java.util.zip.CRC32;
 
 public class PacketHeader {
+    // 0: START; 1: END; 2: DATA; 3: ACK; 4: END_ACK
     public int type;    // 0 ~ 3 byte in the header
     public int seq_num; // 4 ~ 7 byte in the header
     public int length;  // 8 ~ 11 byte in the header
@@ -19,16 +20,18 @@ public class PacketHeader {
 
         ByteBuffer bb = ByteBuffer.allocate(4);
         byte[] typeInByte = bb.putInt(type).array();
+        bb.clear();
         byte[] seqInByte = bb.putInt(seq_num).array();
+        bb.clear();
         byte[] lengInByte = bb.putInt(length).array();
-        bb = ByteBuffer.allocate(8);
-        byte[] checksumInByte = bb.putLong(checksum).array();
+        ByteBuffer bbb = ByteBuffer.allocate(8);
+        byte[] checksumInByte = bbb.putLong(checksum).array();
 
         for(int i = 0; i < 20; i++){
             if (i < 4) head[i] = typeInByte[i];
-            else if (i >= 4 && i < 8) head[i] = seqInByte[i];
-            else if (i >= 8 && i < 12) head[i] = lengInByte[i];
-            else if (i >= 12 && i < 20) head[i] = checksumInByte[i];
+            else if (i >= 4 && i < 8) head[i] = seqInByte[i - 4];
+            else if (i >= 8 && i < 12) head[i] = lengInByte[i - 8];
+            else if (i >= 12 && i < 20) head[i] = checksumInByte[i - 12];
         }
 
         return head;
@@ -54,5 +57,8 @@ public class PacketHeader {
 
         return false;
     }
+
+    public static void main(String[] args) {
+    }  
 }
 
